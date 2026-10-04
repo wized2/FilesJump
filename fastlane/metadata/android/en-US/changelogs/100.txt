@@ -1,0 +1,5 @@
+1.0.0 — First stable release
+• Open AOSP DocumentsUI and exit
+• Multi-strategy launch for OEM devices
+• Adaptive Material You folder icon
+• Signed CI releases (stable + beta)

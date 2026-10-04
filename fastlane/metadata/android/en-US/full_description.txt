@@ -1,0 +1,26 @@
+FilesJump is a minimal home-screen shortcut for Android 11+.
+
+Tap the icon and it opens the native AOSP DocumentsUI (the system Files app), then closes itself so it does not stay in Recents.
+
+<p><b>What it does</b></p>
+<ul>
+<li>Launches DocumentsUI via standard intents (including CATEGORY_APP_FILES)</li>
+<li>Works across AOSP, Google, and many OEM builds</li>
+<li>Transparent activity — no UI flash</li>
+<li>Excluded from the recent-apps list</li>
+</ul>
+
+<p><b>What it does not do</b></p>
+<ul>
+<li>Does not unlock Android/data or Android/obb</li>
+<li>Does not bypass scoped storage</li>
+<li>Does not replace your file manager — it only opens the system one</li>
+</ul>
+
+<p><b>Privacy</b></p>
+<p>No internet permission, no ads, no analytics, no accounts. The app only starts an intent and exits.</p>
+
+<p><b>Requirements</b></p>
+<p>Android 11 (API 30)+. The system DocumentsUI / Files component must be present on the device.</p>
+
+<p>Source and releases: <a href="https://github.com/wized2/FilesJump">github.com/wized2/FilesJump</a></p>

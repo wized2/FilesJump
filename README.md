@@ -43,3 +43,15 @@ Current: **1.0.0** (`versionCode` 100)
 Edit [`release_note.md`](release_note.md) — CI uses it for every GitHub Release body.
 
 Or run **Actions → Build & Release → Run workflow** and fill the `release_note` input to override for that run only.
+
+## Store metadata (Fastlane)
+
+Listing text for F-Droid / IzzyOnDroid lives in:
+
+```text
+fastlane/metadata/android/en-US/
+```
+
+- `short_description.txt` / `full_description.txt` / `title.txt`
+- `changelogs/<versionCode>.txt` (e.g. `100.txt` for versionCode 100)
+- `images/icon.png`
