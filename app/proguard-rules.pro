@@ -1,0 +1,1 @@
+-keep class com.endroid.filesjump.MainActivity { *; }
