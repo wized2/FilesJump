@@ -4,11 +4,23 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <path
-        android:fillColor="#FF000000"
-        android:pathData="M30,44c0,-2.8 2.2,-5 5,-5h14.2l5.5,5.2H73c2.8,0 5,2.2 5,5v28c0,2.8 -2.2,5 -5,5H35c-2.8,0 -5,-2.2 -5,-5V44z" />
-    <path
-        android:fillColor="#FF000000"
-        android:fillAlpha="0.35"
-        android:pathData="M30,54c0,-2.2 1.8,-4 4,-4h40c2.2,0 4,1.8 4,4v23c0,2.8 -2.2,5 -5,5H35c-2.8,0 -5,-2.2 -5,-5V54z" />
+
+    <group
+        android:pivotX="0"
+        android:pivotY="0"
+        android:scaleX="0.10753"
+        android:scaleY="0.10753"
+        android:translateX="10.18"
+        android:translateY="12.71">
+
+        <!-- Back of folder (softer) -->
+        <path
+            android:fillColor="#99000000"
+            android:pathData="M175,560 V258 Q175,208 225,208 H318 Q334,208 346,218 L372,242 Q382,248 396,248 H518 Q565,248 565,295 V560 Z" />
+
+        <!-- Front flap (solid) -->
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M175,560 L238,335 Q248,312 272,312 L600,312 Q640,312 636,350 L590,538 Q583,560 560,560 Z" />
+    </group>
 </vector>
