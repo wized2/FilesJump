@@ -24,3 +24,16 @@ Requires JDK 17. CI builds a signed release when secrets are configured (same pa
 ## License
 
 MIT
+
+## Branching & releases
+
+| Branch | Channel | GitHub Release |
+|--------|---------|----------------|
+| `main` | **stable** | `vX.Y.Z` (latest) |
+| `dev` | **beta** | `vX.Y.Z-beta.<run>` (pre-release) |
+
+Both channels are signed with the **same** release keystore (CI secrets `RELEASE_*`).
+
+## Version
+
+Current: **1.0.0** (`versionCode` 100)

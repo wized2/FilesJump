@@ -11,8 +11,8 @@ android {
         applicationId = "com.endroid.filesjump"
         minSdk = 30
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 100
+        versionName = "1.0.0"
         resourceConfigurations += listOf("en")
     }
 
@@ -48,6 +48,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Always prefer the single release key (CI injects RELEASE_* env).
+            // Local builds without the keystore fall back to debug signing only.
             signingConfig = if (hasReleaseKey) {
                 signingConfigs.getByName("release")
             } else {
