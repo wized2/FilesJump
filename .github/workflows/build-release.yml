@@ -4,6 +4,16 @@ on:
   push:
     branches: [main, dev]
   workflow_dispatch:
+    inputs:
+      release_note:
+        description: "Release notes (optional). Overrides release_note.md when set."
+        required: false
+        type: string
+      channel:
+        description: "Force channel label (leave empty to use branch: main=stable, dev=beta)"
+        required: false
+        type: string
+        default: ""
 
 jobs:
   build:
@@ -17,7 +27,15 @@ jobs:
         id: channel
         run: |
           BR="${GITHUB_REF_NAME}"
-          if [ "$BR" = "main" ]; then
+          FORCE="${{ github.event.inputs.channel }}"
+          if [ -n "$FORCE" ]; then
+            CH="$FORCE"
+          elif [ "$BR" = "main" ]; then
+            CH="stable"
+          else
+            CH="beta"
+          fi
+          if [ "$CH" = "stable" ]; then
             echo "name=stable" >> "$GITHUB_OUTPUT"
             echo "prerelease=false" >> "$GITHUB_OUTPUT"
             echo "suffix=" >> "$GITHUB_OUTPUT"
@@ -28,15 +46,53 @@ jobs:
           fi
           echo "branch=$BR" >> "$GITHUB_OUTPUT"
 
-          # Forks: no release secrets expected → debug-sign, skip GitHub Release
           if [ "${{ github.event.repository.fork }}" = "true" ]; then
             echo "is_fork=true" >> "$GITHUB_OUTPUT"
-            echo "use_release_key=false" >> "$GITHUB_OUTPUT"
-            echo "Fork build — will use debug signing"
+            echo "Fork build — debug signing"
           else
             echo "is_fork=false" >> "$GITHUB_OUTPUT"
-            echo "use_release_key=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Compose release notes
+        id: notes
+        env:
+          INPUT_NOTE: ${{ github.event.inputs.release_note }}
+        run: |
+          set -e
+          OUT="$GITHUB_WORKSPACE/dist-release-body.md"
+          mkdir -p "$(dirname "$OUT")"
+
+          {
+            echo "## FilesJump — **${{ steps.channel.outputs.name }}**"
+            echo ""
+            echo "Branch: \`${{ steps.channel.outputs.branch }}\`"
+            echo ""
+          } > "$OUT"
+
+          if [ -n "$INPUT_NOTE" ]; then
+            echo "Using workflow_dispatch release_note input"
+            printf '%s\n' "$INPUT_NOTE" >> "$OUT"
+          elif [ -f "$GITHUB_WORKSPACE/release_note.md" ]; then
+            echo "Using release_note.md"
+            cat "$GITHUB_WORKSPACE/release_note.md" >> "$OUT"
+          else
+            echo "No custom notes — default blurb"
+            cat >> "$OUT" << 'DEFAULT'
+          Home-screen shortcut → AOSP DocumentsUI (Files), excluded from Recents.
+          DEFAULT
+          fi
+
+          {
+            echo ""
+            echo "---"
+            echo "Signed with the project release key (stable & beta share the same key)."
+            echo ""
+            echo "MIT"
+          } >> "$OUT"
+
+          echo "path=$OUT" >> "$GITHUB_OUTPUT"
+          echo "----- release body preview -----"
+          head -40 "$OUT"
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -124,19 +180,7 @@ jobs:
           tag_name: ${{ steps.ver.outputs.tag }}
           name: FilesJump ${{ steps.ver.outputs.name }}${{ steps.channel.outputs.suffix }} (${{ steps.channel.outputs.name }})
           prerelease: ${{ steps.channel.outputs.prerelease }}
-          body: |
-            ## FilesJump ${{ steps.ver.outputs.name }} — **${{ steps.channel.outputs.name }}**
-
-            Channel: `${{ steps.channel.outputs.branch }}` branch  
-            versionCode: `${{ steps.ver.outputs.code }}`  
-            Signed with the project **release** key (same key for stable & beta).
-
-            Home-screen shortcut → AOSP DocumentsUI (Files), excluded from Recents.
-
-            ### Install
-            Download **${{ steps.ver.outputs.apk }}** below.
-
-            MIT
+          body_path: ${{ steps.notes.outputs.path }}
           files: dist/${{ steps.ver.outputs.apk }}
           fail_on_unmatched_files: true
           generate_release_notes: true

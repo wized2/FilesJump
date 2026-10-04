@@ -37,3 +37,9 @@ Both channels are signed with the **same** release keystore (CI secrets `RELEASE
 ## Version
 
 Current: **1.0.0** (`versionCode` 100)
+
+## Release notes
+
+Edit [`release_note.md`](release_note.md) — CI uses it for every GitHub Release body.
+
+Or run **Actions → Build & Release → Run workflow** and fill the `release_note` input to override for that run only.
